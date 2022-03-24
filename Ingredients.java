@@ -1,3 +1,3 @@
-public class Ingredients {
-    
+public enum Ingredients {
+    SALADE, TOMATE, OIGNON, CHAMPIGNON, PAIN, STEAK, PATE, FROMAGE, CHORIZO
 }
