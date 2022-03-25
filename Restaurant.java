@@ -21,18 +21,27 @@ import javax.swing.JTextField;
 
 public class Restaurant {
     //public List<Client> clients = new ArrayList<>();
+    public static JFrame frame;
 
+    //setter and getter for frame
+    public static JFrame getFrame() {
+        return frame;
+    }
+    //getter for frame 
+    public static void setFrame(JFrame frame) {
+        Restaurant.frame = frame;
+    }
     public void generateClient(){
         //this.clients.add(new Client());eex
     }
 
     public static void main(String[] args) {
         System.out.println("-- Start --");
-        JFrame frame = init();
+        init();
         System.out.println("-- Fin Init --");
 
         while(true){
-            display(frame);
+           display(getFrame());
         }
     }
 
@@ -45,7 +54,7 @@ public class Restaurant {
 
 
 
-    public static JFrame init(){
+    public static void init(){
         System.out.println("    - windows");
         JFrame frame = new JFrame("Restaurant");
         frame.setSize(400, 400);
@@ -67,23 +76,58 @@ public class Restaurant {
         CardLayout layout = new CardLayout();
         layout.setHgap(10);
         layout.setVgap(10);
-        frame.setLayout(layout);  
 
 
-        JPanel main_screen = main_screen();
-        
+                
         //change frame screen
-        frame.setContentPane(main_screen);
+        frame.setContentPane(main_screen());
         
-        return frame;
+        setFrame(frame);
+    }    
+
+
+    public static void switch_between_screens(int key){
+        //get curent screen name
+        String current_screen = getFrame().getContentPane().getName();
+
+        //if current screen is main_screen then sicth to manager_screen
+        if(current_screen.equals("main_screen")){
+            //switch case with the variable key
+            switch(key){
+                case 1:
+                    getFrame().setContentPane(manager_screen());
+                    getFrame().setName("manager_screen");
+                    break;
+            }
+            
+        }
+        //else if current screen is manager_screen then switch to main_screen
+        else if(current_screen.equals("manager_screen")){            
+            switch (key) {
+                case 1:
+                
+                    getFrame().setContentPane(main_screen());
+                    getFrame().setName("main_screen");
+                    break;
+            }
+        }
+
+        getFrame().revalidate();
+        getFrame().repaint();
+
     }
+
+
+
+
+
 
     public static KeyListener keyListener(){
         System.out.println("    - keyListener");
         KeyListener listener = new KeyListener() {
             @Override
             public void keyPressed(KeyEvent event) {
-                printEventInfo("Key Pressed", event);
+                //printEventInfo("Key Pressed", event);
             }
             @Override
             public void keyReleased(KeyEvent event) {
@@ -92,10 +136,19 @@ public class Restaurant {
             
             @Override
             public void keyTyped(KeyEvent event) {
-                //printEventInfo("Key Typed", event);
+                printEventInfo("Key Typed", event);
             }
             private void printEventInfo(String str, KeyEvent e) {
                 System.out.println(str + " : " + e.getKeyChar());
+                if(e.getKeyChar() == 'q'){
+                    System.exit(0);
+                }
+                //else if 1, 2, 3 or 4 pressed
+                else if(e.getKeyChar() == '1' || e.getKeyChar() == '2' || e.getKeyChar() == '3' || e.getKeyChar() == '4'){
+                    //call switch_between_screens with cast int of the key pressed
+                    switch_between_screens(Integer.parseInt(String.valueOf(e.getKeyChar())));
+                }
+
 
             }
         };
@@ -103,9 +156,23 @@ public class Restaurant {
     }
     
     public static JPanel main_screen(){
-        JPanel screen = new JPanel(new FlowLayout());
+        System.out.println("    - main_screen loaded");
 
-        JLabel textField = new JLabel("Quel écran souhaitez vous afficher ?");
+        JPanel screen = new JPanel(new FlowLayout());
+        screen.setName("main_screen");
+        int n = 23;
+        JLabel textField = new JLabel("Quel écran souhaitez vous afficher ?\n1. Manager\nQ." + n);
+        screen.add(textField, BorderLayout.NORTH);
+
+        return screen;
+    }
+
+    public static JPanel manager_screen() {
+        System.out.println("    - manager_screen loaded");
+
+        JPanel screen = new JPanel(new FlowLayout());
+        screen.setName("manager_screen");
+        JLabel textField = new JLabel("Ecran manager.");
         screen.add(textField, BorderLayout.NORTH);
 
         return screen;
