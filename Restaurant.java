@@ -41,7 +41,7 @@ public class Restaurant {
         System.out.println("-- Fin Init --");
 
         while(true){
-           display(getFrame());
+           //display(getFrame());
         }
     }
 
@@ -114,10 +114,9 @@ public class Restaurant {
 
         getFrame().revalidate();
         getFrame().repaint();
-
+        
     }
-
-
+    
 
 
 
@@ -154,7 +153,11 @@ public class Restaurant {
         };
         return listener;
     }
-    
+
+
+
+
+
     public static JPanel main_screen(){
         System.out.println("    - main_screen loaded");
 
