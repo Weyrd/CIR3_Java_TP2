@@ -5,6 +5,7 @@ public abstract class Employe {
     String nom;
     String prenom;
     int salaire;
+    public int streak = 0;
 
     public Employe(String nom, String prenom, int salaire) {
         this.nom = nom;

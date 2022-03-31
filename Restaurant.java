@@ -1,7 +1,5 @@
-//import models.*;
-//import models.boissons.*;
-//import models.employes.*;
-//import models.plats.*;
+import models.*;
+import models.employes.*;
 
 import java.util.*;
 
@@ -19,8 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 
+
 public class Restaurant {
-    //public List<Client> clients = new ArrayList<>();
+
+
     public static JFrame frame;
 
     //setter and getter for frame
@@ -39,6 +39,8 @@ public class Restaurant {
         System.out.println("-- Start --");
         init();
         System.out.println("-- Fin Init --");
+
+        Stock.readCarte();
 
         while(true){
            //display(getFrame());

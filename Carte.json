@@ -1,0 +1,116 @@
+{
+    "Plats": [
+        {
+            "nom": "Salade de tomate",
+            "prix": 9,
+            "ingredients": {
+                "salade": 1,
+                "tomate": 1
+            }
+        },
+        {
+            "nom": "Salade nature",
+            "prix": 9,
+            "ingredients": {
+                "salade": 1
+            }
+        },
+        {
+            "nom": "Potage aux noix",
+            "prix": 8,
+            "ingredients": {
+                "noix": 3
+            }
+        },
+        {
+            "nom": "Potage tomate",
+            "prix": 8,
+            "ingredients": {
+                "tomate": 3
+            }
+        },
+        {
+            "nom": "Potage Champignon",
+            "prix": 8,
+            "ingredients": {
+                "Champignon": 3
+            }
+        },
+        {
+            "nom": "Burger de tomate",
+            "prix": 15,
+            "ingredients": {
+                "tomate": 1,
+                "steack": 1,
+                "salade": 1,
+                "pain": 1
+            }
+        },
+        {
+            "nom": "Burger non vegan",
+            "prix": 15,
+            "ingredients": {
+                "steack": 1,
+                "salade": 1,
+                "pain": 1
+            }
+        },
+        {
+            "nom": "Burger nature",
+            "prix": 15,
+            "ingredients": {
+                "salade": 1,
+                "pain": 1
+            }
+        },
+        {
+            "nom": "Pizza tomate",
+            "prix": 12,
+            "ingredients": {
+                "tomate": 1,
+                "pate": 1,
+                "fromage": 1
+            }
+        },
+        {
+            "nom": "Pizza champignon",
+            "prix": 12,
+            "ingredients": {
+                "fromage": 1,
+                "pate": 1,
+                "Champignon": 1
+            }
+        },
+        {
+            "nom": "Pizza fromage chorizo",
+            "prix": 12,
+            "ingredients": {
+                "fromage": 1,
+                "pate": 1,
+                "chorizo": 1
+            }
+        }
+    ],
+    "Boissons": [
+        {
+            "nom": "Limonade",
+            "prix": 4
+        },
+        {
+            "nom": "Cidre doux",
+            "prix": 5
+        },
+        {
+            "nom": "Biere sans alcool",
+            "prix": 5
+        },
+        {
+            "nom": "Jus de fruit",
+            "prix": 1
+        },
+        {
+            "nom": "Water",
+            "prix": 0
+        }
+    ]
+}
