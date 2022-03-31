@@ -90,26 +90,34 @@ public class Restaurant {
         //get curent screen name
         String current_screen = getFrame().getContentPane().getName();
 
-        //if current screen is main_screen then sicth to manager_screen
-        if(current_screen.equals("main_screen")){
+        if(current_screen.equals("main_screen") || !current_screen.equals("main_screen")){
             //switch case with the variable key
             switch(key){
                 case 1:
-                    getFrame().setContentPane(manager_screen());
-                    getFrame().setName("manager_screen");
+                    getFrame().setContentPane(commande_screen());
+                    getFrame().setName("commande_screen");
                     break;
-            }
-            
-        }
-        //else if current screen is manager_screen then switch to main_screen
-        else if(current_screen.equals("manager_screen")){            
-            switch (key) {
-                case 1:
-                
+                //case 3 cuisine screen
+                case 2:
+                    getFrame().setContentPane(cuisine_screen());
+                    getFrame().setName("cuisine_screen");
+                    break;
+                //case 4 bar screen
+                case 3:
+                    getFrame().setContentPane(bar_screen());
+                    getFrame().setName("bar_screen");
+                    break;
+                //case 5 monitoring screen
+                case 4:
+                    getFrame().setContentPane(monitoring_screen());
+                    getFrame().setName("monitoring_screen");
+                    break;
+                case 5:
                     getFrame().setContentPane(main_screen());
                     getFrame().setName("main_screen");
                     break;
             }
+            
         }
 
         getFrame().revalidate();
@@ -142,6 +150,10 @@ public class Restaurant {
                 if(e.getKeyChar() == 'q'){
                     System.exit(0);
                 }
+                //if esc
+                if(e.getKeyChar() == 27){
+                    switch_between_screens(5);
+                }
                 //else if 1, 2, 3 or 4 pressed
                 else if(e.getKeyChar() == '1' || e.getKeyChar() == '2' || e.getKeyChar() == '3' || e.getKeyChar() == '4'){
                     //call switch_between_screens with cast int of the key pressed
@@ -163,19 +175,55 @@ public class Restaurant {
 
         JPanel screen = new JPanel(new FlowLayout());
         screen.setName("main_screen");
-        int n = 23;
-        JLabel textField = new JLabel("Quel écran souhaitez vous afficher ?\n1. Manager\nQ." + n);
+        JLabel textField = new JLabel("<html>Quel écran voulez-vous afficher ? <br/>1. Ecran prise de commande<br/>2. Ecran cuisine<br/>3. Ecran bar<br/>4. Ecran monitoring<br/><br/>Esc. Retour au menu principal<br/>Q. Quit</html>");
         screen.add(textField, BorderLayout.NORTH);
 
         return screen;
     }
 
-    public static JPanel manager_screen() {
-        System.out.println("    - manager_screen loaded");
+    //new function that return a JPanel for Cuisine
+    public static JPanel cuisine_screen() {
+        System.out.println("    - cuisine_screen loaded");
 
         JPanel screen = new JPanel(new FlowLayout());
-        screen.setName("manager_screen");
-        JLabel textField = new JLabel("Ecran manager.");
+        screen.setName("cuisine_screen");
+        JLabel textField = new JLabel("Ecran cuisine.");
+        screen.add(textField, BorderLayout.NORTH);
+
+        return screen;
+    }
+
+    //new funtion that return a jpanel for Bar
+    public static JPanel bar_screen() {
+        System.out.println("    - bar_screen loaded");
+
+        JPanel screen = new JPanel(new FlowLayout());
+        screen.setName("bar_screen");
+        JLabel textField = new JLabel("Ecran bar.");
+        screen.add(textField, BorderLayout.NORTH);
+
+        return screen;
+    }
+
+    //new function that return a jpanel for Monitoring
+    public static JPanel monitoring_screen() {
+        System.out.println("    - monitoring_screen loaded");
+
+        JPanel screen = new JPanel(new FlowLayout());
+        screen.setName("monitoring_screen");
+        JLabel textField = new JLabel("Ecran monitoring.");
+        screen.add(textField, BorderLayout.NORTH);
+
+        return screen;
+    }
+
+    //new function that return a jpanel for Prise de commande
+    public static JPanel commande_screen() {
+        System.out.println("    - commande_screen loaded");
+
+        JPanel screen = new JPanel(new FlowLayout());
+        screen.setName("commande_screen");
+        JLabel textField = new JLabel("Ecran prise de commande.");
         screen.add(textField, BorderLayout.NORTH);
 
         return screen;
