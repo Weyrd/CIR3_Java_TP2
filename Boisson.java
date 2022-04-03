@@ -1,4 +1,4 @@
-public abstract class Boisson {
+public class Boisson {
     String nom;
     int prix;
 

@@ -30,10 +30,10 @@
             }
         },
         {
-            "nom": "Potage Champignon",
+            "nom": "Potage champignon",
             "prix": 8,
             "ingredients": {
-                "Champignon": 3
+                "champignon": 3
             }
         },
         {
@@ -41,7 +41,7 @@
             "prix": 15,
             "ingredients": {
                 "tomate": 1,
-                "steack": 1,
+                "steak": 1,
                 "salade": 1,
                 "pain": 1
             }
@@ -50,7 +50,7 @@
             "nom": "Burger non vegan",
             "prix": 15,
             "ingredients": {
-                "steack": 1,
+                "steak": 1,
                 "salade": 1,
                 "pain": 1
             }
@@ -78,7 +78,7 @@
             "ingredients": {
                 "fromage": 1,
                 "pate": 1,
-                "Champignon": 1
+                "champignon": 1
             }
         },
         {
@@ -109,7 +109,7 @@
             "prix": 1
         },
         {
-            "nom": "Water",
+            "nom": "Eau",
             "prix": 0
         }
     ]

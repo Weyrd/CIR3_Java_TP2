@@ -1,7 +1,7 @@
 import java.util.*;
 
 
-public abstract class Plat {
+public class Plat {
     String nom;
     int prix;
     HashMap<String, Integer> ingredients = new HashMap<>();

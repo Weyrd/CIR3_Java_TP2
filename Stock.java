@@ -8,31 +8,22 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class Stock {
-    static EnumMap<Ingredients, Integer> ingredients = new EnumMap<>(Ingredients.class);
+    static HashMap<String, Integer> ingredients = new HashMap<>();
     static List<Plat> plats = new ArrayList<>();
     static List<Boisson> boissons = new ArrayList<>();
 
     public Stock() {
-        ingredients.put(Ingredients.SALADE, 10);
-        ingredients.put(Ingredients.TOMATE, 10);
-        ingredients.put(Ingredients.OIGNON, 10);
-        ingredients.put(Ingredients.CHAMPIGNON, 10);
-        ingredients.put(Ingredients.PAIN, 10);
-        ingredients.put(Ingredients.STEAK, 10);
-        ingredients.put(Ingredients.PATE, 10);
-        ingredients.put(Ingredients.FROMAGE, 10);
-        ingredients.put(Ingredients.CHORIZO, 10);
     }
 
-    public static void addIngredient(Ingredients ingredient, int quantity) {
+    public static void addIngredient(String ingredient, int quantity) {
         ingredients.put(ingredient, ingredients.get(ingredient) + quantity);
     }
 
-    public static void removeIngredient(Ingredients ingredient, int quantity) {
+    public static void removeIngredient(String ingredient, int quantity) {
         ingredients.put(ingredient, ingredients.get(ingredient) - quantity);
     }
 
-    public static int getNumberOf(Ingredients ingredient) {
+    public static int getNumberOf(String ingredient) {
         return ingredients.get(ingredient);
     }
 
@@ -40,20 +31,39 @@ public class Stock {
         JSONParser parser = new JSONParser();
         try {
             JSONObject a = (JSONObject) parser.parse(new FileReader("Carte.json"));
+            
+            // First we read the plats
             JSONArray platsArray = (JSONArray) a.get("Plats");
             for (Object o : platsArray) {
                 JSONObject plat = (JSONObject) o;
-                
-                Plat((String) plat.get("nom"), (int) plat.get("prix"), (HashMap<String, Integer>) plat.get("ingredients"));                
+
+                // Get name
+                String nom = plat.get("nom").toString();
+                // Get price
+                int prix = ((Long) plat.get("prix")).intValue();
+                // Get ingredients
+                HashMap<String, Integer> ingredientsMap = new HashMap<>();
+                JSONObject ingredients = (JSONObject) plat.get("ingredients");
+                for (Object ingredient : ingredients.keySet()) {
+                    ingredientsMap.put(ingredient.toString(), ((Long) ingredients.get(ingredient)).intValue());
+                }
+
+                // Add it to the array
+                plats.add(new Plat(nom, prix, ingredientsMap));
             }
-            //same for boisson
+            // Then we read the boissons
             JSONArray boissonsArray = (JSONArray) a.get("Boissons");
             for (Object o : boissonsArray) {
                 JSONObject boisson = (JSONObject) o;
-                Boisson((String) boisson.get("nom"), (int) boisson.get("prix"));                
+
+                // Get name
+                String nom = boisson.get("nom").toString();
+                // Get price
+                int prix = ((Long) boisson.get("prix")).intValue();
+
+                // Add it to the array
+                boissons.add(new Boisson(nom, prix));
             }
-
-
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -62,11 +72,31 @@ public class Stock {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        // Set the stock
+        ingredients.put("salade", 10);
+        ingredients.put("tomate", 10);
+        ingredients.put("oignon", 10);
+        ingredients.put("champignon", 10);
+        ingredients.put("pain", 10);
+        ingredients.put("steak", 10);
+        ingredients.put("pate", 10);
+        ingredients.put("fromage", 10);
+        ingredients.put("chorizo", 10);
     }
 
-    private static void Boisson(String string, int i) {
-	}
-
-	private static void Plat(String string, int i, HashMap<String, Integer> hashMap) {
+    public static void printStock() {
+        System.out.println("Plats : ");
+        for (Plat plat : plats) {
+            System.out.println("\t" + plat.nom + " : " + plat.prix + " -> " + plat.ingredients);
+        }
+        System.out.println("Boissons : ");
+        for (Boisson boisson : boissons) {
+            System.out.println("\t" + boisson.nom + " : " + boisson.prix);
+        }
+        System.out.println("Stock : ");
+        for (String ingredient : ingredients.keySet()) {
+            System.out.println("\t" + ingredient + " : " + ingredients.get(ingredient));
+        }
     }
 }
