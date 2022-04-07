@@ -9,6 +9,15 @@
             }
         },
         {
+            "nom": "Salade au poulet",
+            "prix": 11,
+            "ingredients": {
+                "salade": 1,
+                "tomate": 1,
+                "steak": 1
+            }
+        },
+        {
             "nom": "Salade nature",
             "prix": 9,
             "ingredients": {

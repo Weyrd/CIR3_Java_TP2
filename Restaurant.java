@@ -2,36 +2,27 @@ import models.*;
 import models.employes.*;
 
 import java.util.*;
-
+import java.util.List;
 import java.awt.*;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.CardLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.ParseException;
 
 import javax.swing.*;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class Restaurant {
 
     public static JFrame frame;
-
-    // setter and getter for frame
-    public static JFrame getFrame() {
-        return frame;
-    }
-
-    // getter for frame
-    public static void setFrame(JFrame frame) {
-        Restaurant.frame = frame;
-    }
-
-    public void generateClient() {
-        // this.clients.add(new Client());eex
-    }
+    public static List<Commande> commandes = new ArrayList<>();
 
     public static void main(String[] args) {
         System.out.println("-- Start --");
@@ -40,12 +31,14 @@ public class Restaurant {
 
         Stock.readCarte();
         Stock.printStock();
+        Employes.initEmployes();
+
     }
 
     public static void init() {
         System.out.println("    - windows");
         JFrame frame = new JFrame("Restaurant");
-        frame.setSize(400, 400);
+        frame.setSize(600, 500);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -163,23 +156,45 @@ public class Restaurant {
     // new function that return a JPanel for Cuisine
     public static JPanel cuisine_screen() {
         System.out.println("    - cuisine_screen loaded");
-
         JPanel screen = new JPanel(new FlowLayout());
-        screen.setName("cuisine_screen");
-        JLabel textField = new JLabel("Ecran cuisine.");
+
+        JLabel textField = new JLabel("Cuisine screen.");
         screen.add(textField, BorderLayout.NORTH);
+
+        screen.setName("cuisine_screen");
+        // display all commandes
+        for (Commande commande : commandes) {
+            if (commande.isPlat) {
+                JButton button = new JButton(commande.nom + " : " + commande.getTime());
+                button.setBackground(new Color(50, 155, 50));
+                button.setForeground(Color.WHITE);
+                button.setFont(new Font("Arial", Font.PLAIN, 14));
+                screen.add(button);
+            }
+        }
 
         return screen;
     }
 
+
     // new funtion that return a jpanel for Bar
-    public static JPanel bar_screen() {
+    public static JPanel bar_screen()  {
         System.out.println("    - bar_screen loaded");
 
         JPanel screen = new JPanel(new FlowLayout());
         screen.setName("bar_screen");
         JLabel textField = new JLabel("Ecran bar.");
         screen.add(textField, BorderLayout.NORTH);
+        for (Commande commande : commandes) {
+            if (!commande.isPlat) {
+                JButton button = new JButton(commande.nom + " : " + commande.getTime());
+                button.setBackground(new Color(50, 50, 155));
+                button.setForeground(Color.WHITE);
+                button.setFont(new Font("Arial", Font.PLAIN, 14));
+                button.setPreferredSize(new Dimension(150, 40));
+                screen.add(button);
+            }
+        }
 
         return screen;
     }
@@ -192,6 +207,54 @@ public class Restaurant {
         screen.setName("monitoring_screen");
         JLabel textField = new JLabel("Ecran monitoring.");
         screen.add(textField, BorderLayout.NORTH);
+
+        JLabel textField2 = new JLabel("Sélection employés du jour :");
+        screen.add(textField2);
+
+
+        List<Employe> employesDuJour = new ArrayList<>();
+        // display all employes
+        for (Employe employe : Employes.getAllEmployes()) {
+            JButton button = new JButton(employe.nom + " " + employe.prenom);
+            if (employe.streak < 3 || employe.type == EmployesEnum.MANAGER) {
+                button.setBackground(Color.GREEN);
+                // toggle the color of the button on click
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (button.getBackground().equals(Color.GREEN)) {
+                            button.setBackground(Color.CYAN);
+                            employesDuJour.add(employe);
+                        } else {
+                            button.setBackground(Color.GREEN);
+                            employesDuJour.remove(employe);
+                        }
+                    }
+                });
+            } else {
+                button.setBackground(new Color(255, 50, 50));
+                // disable button
+                button.setEnabled(false);
+            }
+            button.setForeground(Color.WHITE);
+            button.setFont(new Font("Arial", Font.PLAIN, 14));
+            screen.add(button);
+        }
+        // button de confirmation
+        JButton button = new JButton("Confirmer");
+        button.setBackground(new Color(50, 155, 50));
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Arial", Font.PLAIN, 14));
+        // onclick
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (Employes.checkEmployesDuJour(employesDuJour))
+                // focus frame
+                getFrame().requestFocus();
+            }
+        });
+        screen.add(button);
 
         return screen;
     }
@@ -213,9 +276,20 @@ public class Restaurant {
             JButton button = new JButton(plat.nom);
             button.setBackground(new Color(50, 155, 50));
             button.setForeground(Color.WHITE);
+            button.setPreferredSize(new Dimension(150, 40));
+            button.setFont(new Font("Arial", Font.PLAIN, 14));
+            // onclick
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    commandes.add(new Commande(plat.nom, true));
+                    // focus frame
+                    getFrame().requestFocus();
+                }
+            });
             screen.add(button);
         }
-        
+
         JSeparator separator2 = new JSeparator();
         separator2.setPreferredSize(new Dimension(1000000, 1));
         screen.add(separator2);
@@ -224,9 +298,30 @@ public class Restaurant {
             JButton button = new JButton(boisson.nom);
             button.setBackground(new Color(50, 50, 155));
             button.setForeground(Color.WHITE);
+            button.setPreferredSize(new Dimension(150, 40));
+            button.setFont(new Font("Arial", Font.PLAIN, 14));
+            // onclick
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    commandes.add(new Commande(boisson.nom, false));
+                    // focus frame
+                    getFrame().requestFocus();
+                }
+            });
             screen.add(button);
         }
 
         return screen;
+    }
+
+    // getter for frame
+    public static JFrame getFrame() {
+        return frame;
+    }
+
+    // setter for frame
+    public static void setFrame(JFrame frame) {
+        Restaurant.frame = frame;
     }
 }

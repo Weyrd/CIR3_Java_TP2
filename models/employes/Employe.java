@@ -2,8 +2,8 @@ package models.employes;
 
 public abstract class Employe {
     public EmployesEnum type;
-    String nom;
-    String prenom;
+    public String nom;
+    public String prenom;
     int salaire;
     public int streak = 0;
 
