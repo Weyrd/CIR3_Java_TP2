@@ -1,0 +1,43 @@
+┌─────────────────────────────────┐
+│            Table N°1            │
+├─────────────────────────────────┤
+│ - Potage tomate           8€    │
+│ - Potage tomate           8€    │
+│ - Potage tomate           8€    │
+│ - Burger de tomate        15€   │
+│ - Burger non vegan        15€   │
+│ - Burger non vegan        15€   │
+│ - Burger non vegan        15€   │
+│ - Burger non vegan        15€   │
+│ - Burger non vegan        15€   │
+│ - Burger non vegan        15€   │
+│ - Burger non vegan        15€   │
+│ - Burger non vegan        15€   │
+│ - Burger non vegan        15€   │
+│ - Pizza champignon        12€   │
+│ - Pizza champignon        12€   │
+│ - Pizza champignon        12€   │
+│ - Pizza champignon        12€   │
+│ - Pizza champignon        12€   │
+│ - Pizza champignon        12€   │
+│ - Pizza champignon        12€   │
+│ - Pizza champignon        12€   │
+│ - Pizza champignon        12€   │
+│ - Pizza champignon        12€   │
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Potage aux noix         8€    │
+│ - Potage aux noix         8€    │
+│ - Potage aux noix         8€    │
+│ - Limonade                4€    │
+│                                 │
+│ Prix Total                432€  │
+└─────────────────────────────────┘

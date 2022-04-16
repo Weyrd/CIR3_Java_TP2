@@ -98,7 +98,26 @@
                 "pate": 1,
                 "chorizo": 1
             }
+        },
+        {
+            "nom": "Fajitas poulet",
+            "prix": 11,
+            "ingredients": {
+                "riz": 1,
+                "poulet": 1,
+                "tortilla": 1
+            }
+        },
+        {
+            "nom": "Fajitas steak",
+            "prix": 11,
+            "ingredients": {
+                "steak": 1,
+                "riz": 1,
+                "tortilla": 1
+            }
         }
+        
     ],
     "Boissons": [
         {

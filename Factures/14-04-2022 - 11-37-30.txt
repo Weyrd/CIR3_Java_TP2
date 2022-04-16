@@ -1,0 +1,15 @@
+┌─────────────────────────────────┐
+│            Table N°4            │
+├─────────────────────────────────┤
+│ - Potage tomate           8€    │
+│ - Potage tomate           8€    │
+│ - Potage tomate           8€    │
+│ - Potage tomate           8€    │
+│ - Potage tomate           8€    │
+│ - Potage tomate           8€    │
+│ - Potage tomate           8€    │
+│ - Potage tomate           8€    │
+│ - Potage tomate           8€    │
+│                                 │
+│ Prix Total                72€   │
+└─────────────────────────────────┘

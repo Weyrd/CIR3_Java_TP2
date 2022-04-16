@@ -73,7 +73,7 @@ public class Stock {
             e.printStackTrace();
         }
 
-        // Set the stock
+        // Set the default stock
         ingredients.put("salade", 10);
         ingredients.put("tomate", 10);
         ingredients.put("oignon", 10);
@@ -81,8 +81,12 @@ public class Stock {
         ingredients.put("pain", 10);
         ingredients.put("steak", 10);
         ingredients.put("pate", 10);
+        ingredients.put("tortilla", 10);
         ingredients.put("fromage", 10);
         ingredients.put("chorizo", 10);
+        ingredients.put("poulet", 10);
+        ingredients.put("riz", 10);
+        ingredients.put("noix", 10);
     }
 
     public static void printStock() {
@@ -98,5 +102,14 @@ public class Stock {
         for (String ingredient : ingredients.keySet()) {
             System.out.println("\t" + ingredient + " : " + ingredients.get(ingredient));
         }
+    }
+
+    public static boolean isAvailable(Plat plat) {
+        for (String ingredient : plat.ingredients.keySet()) {
+            if (ingredients.get(ingredient) < plat.ingredients.get(ingredient)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -1,0 +1,17 @@
+┌─────────────────────────────────┐
+│            Table N°1            │
+├─────────────────────────────────┤
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Fajitas poulet          11€   │
+│ - Cidre doux              5€    │
+│ - Cidre doux              5€    │
+│ - Cidre doux              5€    │
+│ - Cidre doux              5€    │
+│ - Cidre doux              5€    │
+│ - Cidre doux              5€    │
+│                                 │
+│ Prix Total                85€   │
+└─────────────────────────────────┘

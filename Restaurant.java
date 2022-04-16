@@ -5,24 +5,24 @@ import java.util.*;
 import java.util.List;
 import java.awt.*;
 import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.CardLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.text.ParseException;
 
 import javax.swing.*;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.Timer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Restaurant {
 
-    public static JFrame frame;
+    public static JFrame frame; // Fenêtre principale
     public static List<Commande> commandes = new ArrayList<>();
+    static int current_screen_id; // Ecran actuellement affiché
+    static boolean dayStarted = false;
 
     public static void main(String[] args) {
         System.out.println("-- Start --");
@@ -63,7 +63,23 @@ public class Restaurant {
         setFrame(frame);
     }
 
+    // function that create Facture of the table
+    public static void createFacture(int tableNumber) {
+        List<Commande> commandeList = new ArrayList<>();
+
+        for (Commande commande : commandes) {
+            if (commande.table == tableNumber) {
+                commandeList.add(commande);
+
+            }
+        }
+        commandes.removeAll(commandeList);
+        Facture facture = new Facture(commandeList, tableNumber);
+        Facture.printFacture();
+    }
+
     public static void switch_between_screens(int key) {
+        current_screen_id = key;
         // get curent screen name
         String current_screen = getFrame().getContentPane().getName();
 
@@ -158,41 +174,81 @@ public class Restaurant {
         System.out.println("    - cuisine_screen loaded");
         JPanel screen = new JPanel(new FlowLayout());
 
+        screen.setName("cuisine_screen");
+
         JLabel textField = new JLabel("Cuisine screen.");
         screen.add(textField, BorderLayout.NORTH);
 
-        screen.setName("cuisine_screen");
+        if (dayStarted == false) {
+            JLabel textField2 = new JLabel("Veuillez choisir les employés du jour.");
+            screen.add(textField2, BorderLayout.NORTH);
+            return screen;
+        }
+
         // display all commandes
         for (Commande commande : commandes) {
-            if (commande.isPlat) {
-                JButton button = new JButton(commande.nom + " : " + commande.getTime());
-                button.setBackground(new Color(50, 155, 50));
-                button.setForeground(Color.WHITE);
-                button.setFont(new Font("Arial", Font.PLAIN, 14));
+            if (commande.isPlat && commande.isComplete == false) {
+
+                JButton button = UI.createButton(commande.nom + " : " + commande.getTime());
                 screen.add(button);
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        commande.isComplete = true;
+                        switch_between_screens(2);
+                        getFrame().requestFocus();
+                    }
+                });
+
+                Timer SimpleTimer = new Timer(1000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        button.setText(commande.nom + " : " + commande.getTime());
+                    }
+                });
+                SimpleTimer.start();
             }
         }
 
         return screen;
     }
 
-
     // new funtion that return a jpanel for Bar
-    public static JPanel bar_screen()  {
+    public static JPanel bar_screen() {
         System.out.println("    - bar_screen loaded");
 
         JPanel screen = new JPanel(new FlowLayout());
         screen.setName("bar_screen");
         JLabel textField = new JLabel("Ecran bar.");
         screen.add(textField, BorderLayout.NORTH);
+
+        if (dayStarted == false) {
+            JLabel textField2 = new JLabel("Veuillez choisir les employés du jour.");
+            screen.add(textField2, BorderLayout.NORTH);
+            return screen;
+        }
+
         for (Commande commande : commandes) {
-            if (!commande.isPlat) {
-                JButton button = new JButton(commande.nom + " : " + commande.getTime());
-                button.setBackground(new Color(50, 50, 155));
-                button.setForeground(Color.WHITE);
-                button.setFont(new Font("Arial", Font.PLAIN, 14));
-                button.setPreferredSize(new Dimension(150, 40));
+            if (!commande.isPlat && commande.isComplete == false) {
+
+                JButton button = UI.createButton(commande.nom + " : " + commande.getTime());
                 screen.add(button);
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        commande.isComplete = true;
+                        getFrame().requestFocus();
+                        switch_between_screens(3);
+                    }
+                });
+
+                Timer SimpleTimer = new Timer(1000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        button.setText(commande.nom + " : " + commande.getTime());
+                    }
+                });
+                SimpleTimer.start();
             }
         }
 
@@ -208,55 +264,126 @@ public class Restaurant {
         JLabel textField = new JLabel("Ecran monitoring.");
         screen.add(textField, BorderLayout.NORTH);
 
-        JLabel textField2 = new JLabel("Sélection employés du jour :");
-        screen.add(textField2);
+        if (dayStarted == false) {
+            JLabel textField2 = new JLabel("Sélection employés du jour :");
+            screen.add(textField2);
 
+            GridLayout layout = new GridLayout(0, 2);
+            layout.setHgap(5);
+            layout.setVgap(5);
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.setLayout(layout);
+            // fix the width of the panel
+            buttonPanel.setPreferredSize(new Dimension(500, 375));
+            screen.add(buttonPanel, BorderLayout.CENTER);
 
-        List<Employe> employesDuJour = new ArrayList<>();
-        // display all employes
-        for (Employe employe : Employes.getAllEmployes()) {
-            JButton button = new JButton(employe.nom + " " + employe.prenom);
-            if (employe.streak < 3 || employe.type == EmployesEnum.MANAGER) {
-                button.setBackground(Color.GREEN);
-                // toggle the color of the button on click
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (button.getBackground().equals(Color.GREEN)) {
-                            button.setBackground(Color.CYAN);
-                            employesDuJour.add(employe);
-                        } else {
-                            button.setBackground(Color.GREEN);
-                            employesDuJour.remove(employe);
+            List<Employe> employesDuJour = new ArrayList<>();
+            // display all employes
+            for (Employe employe : Employes.getAllEmployes()) {
+                JButton button = UI.createButton(employe.type + " : " + employe.nom + " " + employe.prenom);
+                if (employe.streak < 3 || employe.type == EmployesEnum.MANAGER) {
+                    employesDuJour.add(employe);
+                    button.setBackground(Color.GREEN);
+                    // toggle the color of the button on click
+                    button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            if (button.getBackground().equals(Color.GREEN)) {
+                                button.setBackground(Color.GRAY);
+                                employesDuJour.remove(employe);
+                            } else {
+                                button.setBackground(Color.GREEN);
+                                employesDuJour.add(employe);
+                            }
+                            // focus frame
+                            getFrame().requestFocus();
                         }
+                    });
+                } else {
+                    button.setBackground(new Color(255, 50, 50));
+                    button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            getFrame().requestFocus();
+                        }
+                    });
+                }
+                button.setForeground(Color.WHITE);
+                button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+                // border
+                button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                buttonPanel.add(button);
+            }
+            // button de confirmation
+            JButton button = UI.createButton("Confirmer");
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (Employes.checkEmployesDuJour(employesDuJour)) {
+                        Employes.setEmployesDuJour(employesDuJour);
+                        dayStarted = true;
+                        switch_between_screens(4);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Vous n'avez pas sélectionné tous les employés du jour.",
+                                "Erreur", JOptionPane.ERROR_MESSAGE);
                     }
-                });
-            } else {
-                button.setBackground(new Color(255, 50, 50));
-                // disable button
-                button.setEnabled(false);
-            }
-            button.setForeground(Color.WHITE);
-            button.setFont(new Font("Arial", Font.PLAIN, 14));
+                    // focus frame
+                    getFrame().requestFocus();
+                }
+            });
             screen.add(button);
-        }
-        // button de confirmation
-        JButton button = new JButton("Confirmer");
-        button.setBackground(new Color(50, 155, 50));
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Arial", Font.PLAIN, 14));
-        // onclick
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (Employes.checkEmployesDuJour(employesDuJour))
-                // focus frame
-                getFrame().requestFocus();
-            }
-        });
-        screen.add(button);
 
-        return screen;
+            return screen;
+        }
+        // Selection deja faite
+        else {
+            JLabel textField2 = new JLabel("Employés du jour :");
+            screen.add(textField2);
+
+            // En tete du tableau
+            String[] columnNames = { "Nom",
+                    "Prenom",
+                    "Rôle",
+                    "Streak",
+                    "Salaire" };
+
+            Object[][] data = new Object[Employes.getEmployesDuJour().size()][5];
+
+            int i = 0;
+            for (Employe employe : Employes.getEmployesDuJour()) {
+                data[i] = new Object[5];
+                data[i][0] = employe.nom;
+                data[i][1] = employe.prenom;
+                data[i][2] = employe.type;
+                data[i][3] = employe.streak;
+                data[i][4] = employe.salaire;
+                i++;
+            }
+
+            final JTable table = new JTable(data, columnNames);
+
+            table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+            table.setFillsViewportHeight(true);
+
+            JScrollPane scrollPane = new JScrollPane(table);
+            // set height to display all table content
+            scrollPane.setPreferredSize(
+                    new Dimension(500, Math.min(350, (int) (Employes.getEmployesDuJour().size() * 17.8))));
+
+            screen.add(scrollPane);
+
+            JButton button = UI.createButton("Fin de la journée");
+            screen.add(button, BorderLayout.SOUTH);
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    getFrame().requestFocus();
+                }
+            });
+
+            return screen;
+        }
+
     }
 
     // new function that return a jpanel for Prise de commande
@@ -268,46 +395,102 @@ public class Restaurant {
         JLabel textField = new JLabel("Ecran prise de commande.");
         screen.add(textField, BorderLayout.NORTH);
 
+        if (dayStarted == false) {
+            JLabel textField2 = new JLabel("Veuillez choisir les employés du jour.");
+            screen.add(textField2, BorderLayout.NORTH);
+            return screen;
+        }
+
         JSeparator separator = new JSeparator();
-        separator.setPreferredSize(new Dimension(1000000, 7));
+        separator.setPreferredSize(new Dimension(1000000, 1));
         screen.add(separator);
 
+        // Combo box for the table
+        JComboBox<String> comboBox = new JComboBox<String>();
+        comboBox.addItem("Table 1");
+        comboBox.addItem("Table 2");
+        comboBox.addItem("Table 3");
+        comboBox.addItem("Table 4");
+        comboBox.addItem("Table 5");
+
+        screen.add(comboBox, BorderLayout.SOUTH);
+
+        // Button to create the bill
+        JButton billButton = UI.createButton("Créer la facture", Color.ORANGE);
+        screen.add(billButton, BorderLayout.SOUTH);
+
+        billButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // get the selected table
+                int table = comboBox.getSelectedIndex() + 1;
+                // get the bill
+                createFacture(table);
+                // focus frame
+                getFrame().requestFocus();
+            }
+        });
+
+        JSeparator separator2 = new JSeparator();
+        separator2.setPreferredSize(new Dimension(1000000, 7));
+        screen.add(separator2);
+
         for (Plat plat : Stock.plats) {
-            JButton button = new JButton(plat.nom);
-            button.setBackground(new Color(50, 155, 50));
-            button.setForeground(Color.WHITE);
-            button.setPreferredSize(new Dimension(150, 40));
-            button.setFont(new Font("Arial", Font.PLAIN, 14));
+            JButton button = UI.createButton(plat.nom);
+            screen.add(button);
+
             // onclick
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    commandes.add(new Commande(plat.nom, true));
+                    commandes.add(new Commande(plat.nom, true, comboBox.getSelectedIndex() + 1));
                     // focus frame
                     getFrame().requestFocus();
+                    // get all ingredients
+                    // Delete corresponding plat.ingredients from commande in class Stock
+                    HashMap<String, Integer> ingredients = new HashMap<>();
+
+                    for (Plat p : Stock.plats) {
+                        if (plat.nom == p.nom) {
+                            ingredients = p.ingredients;
+                        }
+                    }
+
+                    for (String ingredient : ingredients.keySet()) {
+                        Stock.removeIngredient(ingredient, ingredients.get(ingredient));
+                    }
+                    Stock.printStock();
+                    if (Stock.isAvailable(plat) == false) {
+                        switch_between_screens(1);
+                        button.setEnabled(false);
+                    }
                 }
             });
             screen.add(button);
+            if (Stock.isAvailable(plat) == false) {
+                        button.setEnabled(false);
+                    }
         }
 
-        JSeparator separator2 = new JSeparator();
-        separator2.setPreferredSize(new Dimension(1000000, 1));
-        screen.add(separator2);
+        JSeparator separator3 = new JSeparator();
+        separator3.setPreferredSize(new Dimension(1000000, 1));
+        screen.add(separator3);
 
         for (Boisson boisson : Stock.boissons) {
-            JButton button = new JButton(boisson.nom);
-            button.setBackground(new Color(50, 50, 155));
-            button.setForeground(Color.WHITE);
-            button.setPreferredSize(new Dimension(150, 40));
-            button.setFont(new Font("Arial", Font.PLAIN, 14));
+
+            JButton button = UI.createButton(boisson.nom, Color.BLUE);
+            screen.add(button);
+
             // onclick
             button.addActionListener(new ActionListener() {
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    commandes.add(new Commande(boisson.nom, false));
+                    commandes.add(new Commande(boisson.nom, false, comboBox.getSelectedIndex() + 1));
                     // focus frame
                     getFrame().requestFocus();
                 }
+
             });
             screen.add(button);
         }

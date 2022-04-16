@@ -7,19 +7,25 @@ public class Employes {
 
     public static void initEmployes() {
         employes.add(new Cuisinier("Pinateau", "Pierre", 1000));
-        employes.add(new Cuisinier("Pinateau", "Pierre 2", 1000));
-        employes.add(new Cuisinier("Pinateau", "Pierre 3", 1000));
-        employes.add(new Barman("Singeot-sousa", "Tanguy", 2000));
-        employes.add(new Barman("Singeot-sousa", "Tanguy 2", 2000));
-        employes.add(new Barman("Singeot-sousa", "Tanguy 3", 2000));
-        employes.add(new Manager("Singeot-sousa", "Tanguy", 2000));
-        employes.add(new Manager("Singeot-sousa", "Tanguy 2", 2000));
-        employes.add(new Manager("Singeot-sousa", "Tanguy 3", 2000));
-        employes.add(new Barman("Singeot-sousa", "Tanguy", 2000));
-        employes.add(new Barman("Singeot-sousa", "Tanguy 2", 2000));
-        employes.add(new Barman("Singeot-sousa", "Tanguy 3", 2000));
+        employes.add(new Cuisinier("Groux", "Louis", 1000));
+        employes.add(new Cuisinier("Singeot", "Tanguy", 1000));
+        employes.add(new Cuisinier("Duverger", "Maxime", 1000));
+        employes.add(new Cuisinier("Giot", "Amaury", 1000));
+        employes.add(new Barman("Lourenco", "Quentin", 2000));
+        employes.add(new Barman("Rambeau", "Iémélian", 2000));
+        employes.add(new Barman("Dessenne", "Corentin", 2000));
+        employes.add(new Manager("Colin", "Vincent", 2000));
+        employes.add(new Manager("Bertrand", "Ugo", 2000));
+        employes.add(new Manager("Bouhelassa", "Samy", 2000));
+        employes.add(new Serveur("Cousin", "Flora", 2000));
+        employes.add(new Serveur("Klopocki", "Noé", 2000));
+        employes.add(new Serveur("Verbeke", "Maxence", 2000));
+        employes.add(new Serveur("Zhou", "Lucas", 2000));
 
         employes.get(3).streak = 3;
+        employes.get(6).streak = 3;
+        employes.get(9).streak = 3;
+        employes.get(10).streak = 3;
     }
 
     public static void addEmploye(Employe employe) {
@@ -46,6 +52,10 @@ public class Employes {
 
     public static List<Employe> getEmployesDuJour() {
         return employesDuJour;
+    }
+
+    public static void setEmployesDuJour(List<Employe> employesDuJour) {
+        Employes.employesDuJour = employesDuJour;
     }
 
     public static boolean checkEmployesDuJour(List<Employe> employesDuJour) {
