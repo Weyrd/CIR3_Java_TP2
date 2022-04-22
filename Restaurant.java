@@ -1,4 +1,3 @@
-import models.*;
 import models.employes.*;
 
 import java.util.*;
@@ -13,6 +12,7 @@ import javax.swing.*;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,7 +29,7 @@ public class Restaurant {
         init();
         System.out.println("-- Fin Init --");
 
-        Stock.readCarte();
+        Stock.init();
         Stock.printStock();
         Employes.initEmployes();
 
@@ -75,7 +75,7 @@ public class Restaurant {
         }
         commandes.removeAll(commandeList);
         Facture facture = new Facture(commandeList, tableNumber);
-        Facture.printFacture();
+        facture.printFacture();
     }
 
     public static void switch_between_screens(int key) {
@@ -335,8 +335,10 @@ public class Restaurant {
 
             return screen;
         }
+
         // Selection deja faite
         else {
+
             JLabel textField2 = new JLabel("Employés du jour :");
             screen.add(textField2);
 
@@ -360,7 +362,16 @@ public class Restaurant {
                 i++;
             }
 
+            DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    // all cells false
+                    return false;
+                }
+            };
+
             final JTable table = new JTable(data, columnNames);
+            table.setModel(tableModel);
 
             table.setPreferredScrollableViewportSize(new Dimension(500, 70));
             table.setFillsViewportHeight(true);
@@ -371,6 +382,46 @@ public class Restaurant {
                     new Dimension(500, Math.min(350, (int) (Employes.getEmployesDuJour().size() * 17.8))));
 
             screen.add(scrollPane);
+
+            JLabel textField3 = new JLabel("Stock actuel :");
+            screen.add(textField3);
+
+            // En tete du tableau
+            String[] columnNames2 = { "Ingrédient",
+                    "Quantité" };
+
+            Object[][] data2 = new Object[Stock.ingredients.size()][2];
+
+            int i2 = 0;
+            for (String ingredient : Stock.ingredients.keySet()) {
+                data2[i2] = new Object[2];
+                data2[i2][0] = ingredient;
+                data2[i2][1] = Stock.getNumberOf(ingredient);
+                i2++;
+            }
+
+            DefaultTableModel tableModel2 = new DefaultTableModel(data2, columnNames2) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    // all cells false
+                    return false;
+                }
+            };
+
+            final JTable table2 = new JTable(data2, columnNames2);
+            table2.setModel(tableModel2);
+            table2.setFocusable(false);
+
+            table2.setPreferredScrollableViewportSize(new Dimension(500, 70));
+            table2.setFillsViewportHeight(true);
+
+            JScrollPane scrollPane2 = new JScrollPane(table2);
+            // set height to display all table content
+            scrollPane2.setPreferredSize(
+                    new Dimension(500, Math.min(350, (int) (Employes.getEmployesDuJour().size() * 17.8))));
+
+            scrollPane2.setFocusable(false);
+            screen.add(scrollPane2);
 
             JButton button = UI.createButton("Fin de la journée");
             screen.add(button, BorderLayout.SOUTH);
@@ -468,8 +519,8 @@ public class Restaurant {
             });
             screen.add(button);
             if (Stock.isAvailable(plat) == false) {
-                        button.setEnabled(false);
-                    }
+                button.setEnabled(false);
+            }
         }
 
         JSeparator separator3 = new JSeparator();
