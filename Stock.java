@@ -2,10 +2,6 @@ import java.util.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import static java.util.Map.entry;
 
 public class Stock {
@@ -122,76 +118,6 @@ public class Stock {
         boissons.add(new Boisson("Jus de fruit", 1));
         boissons.add(new Boisson("Eau", 0));
 
-    }
-
-    /**
-     * Génère le stock et la carte des plats et des boissons à partir d'un fichier
-     * JSON.
-     * 
-     * @param path Chemin du fichier JSON.
-     * @deprecated Il nous a été déconseillé d'utiliser un fichier JSON pour la
-     *             carte. Il vaut mieux utiliser la fonction Stock.init().
-     */
-    public static void initFromJSON(String path) {
-        JSONParser parser = new JSONParser();
-        try {
-            JSONObject a = (JSONObject) parser.parse(new FileReader(path));
-
-            // First we read the plats
-            JSONArray platsArray = (JSONArray) a.get("Plats");
-            for (Object o : platsArray) {
-                JSONObject plat = (JSONObject) o;
-
-                // Get name
-                String nom = plat.get("nom").toString();
-                // Get price
-                int prix = ((Long) plat.get("prix")).intValue();
-                // Get ingredients
-                HashMap<String, Integer> ingredientsMap = new HashMap<>();
-                JSONObject ingredients = (JSONObject) plat.get("ingredients");
-                for (Object ingredient : ingredients.keySet()) {
-                    ingredientsMap.put(ingredient.toString(), ((Long) ingredients.get(ingredient)).intValue());
-                }
-
-                // Add it to the array
-                plats.add(new Plat(nom, prix, ingredientsMap));
-            }
-            // Then we read the boissons
-            JSONArray boissonsArray = (JSONArray) a.get("Boissons");
-            for (Object o : boissonsArray) {
-                JSONObject boisson = (JSONObject) o;
-
-                // Get name
-                String nom = boisson.get("nom").toString();
-                // Get price
-                int prix = ((Long) boisson.get("prix")).intValue();
-
-                // Add it to the array
-                boissons.add(new Boisson(nom, prix));
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        // Stock par défaut
-        ingredients.put("salade", 10);
-        ingredients.put("tomate", 10);
-        ingredients.put("oignon", 10);
-        ingredients.put("champignon", 10);
-        ingredients.put("pain", 10);
-        ingredients.put("steak", 10);
-        ingredients.put("pate", 10);
-        ingredients.put("tortilla", 10);
-        ingredients.put("fromage", 10);
-        ingredients.put("chorizo", 10);
-        ingredients.put("poulet", 10);
-        ingredients.put("riz", 10);
-        ingredients.put("noix", 10);
     }
 
     /**

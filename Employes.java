@@ -82,4 +82,12 @@ public class Employes {
             return true; // employés complets
         }
     }
+
+    public static void addEmployeDuJour(Employe employe) {
+        employesDuJour.add(employe);
+    }
+
+    public static void removeEmployeDuJour(Employe employe) {
+        employesDuJour.remove(employe);
+    }
 }

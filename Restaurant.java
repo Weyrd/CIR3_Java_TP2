@@ -38,7 +38,7 @@ public class Restaurant {
     public static void init() {
         System.out.println("    - windows");
         JFrame frame = new JFrame("Restaurant");
-        frame.setSize(600, 500);
+        frame.setSize(600, 600);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -89,25 +89,30 @@ public class Restaurant {
                 case 1:
                     getFrame().setContentPane(commande_screen());
                     getFrame().setName("commande_screen");
+                    getFrame().setTitle("Commande");
                     break;
                 // case 3 cuisine screen
                 case 2:
                     getFrame().setContentPane(cuisine_screen());
                     getFrame().setName("cuisine_screen");
+                    getFrame().setTitle("Cuisine");
                     break;
                 // case 4 bar screen
                 case 3:
                     getFrame().setContentPane(bar_screen());
                     getFrame().setName("bar_screen");
+                    getFrame().setTitle("Bar");
                     break;
                 // case 5 monitoring screen
                 case 4:
                     getFrame().setContentPane(monitoring_screen());
                     getFrame().setName("monitoring_screen");
+                    getFrame().setTitle("Monitoring");
                     break;
                 case 5:
                     getFrame().setContentPane(main_screen());
                     getFrame().setName("main_screen");
+                    getFrame().setTitle("Restaurant");
                     break;
             }
 
@@ -123,21 +128,14 @@ public class Restaurant {
         KeyListener listener = new KeyListener() {
             @Override
             public void keyPressed(KeyEvent event) {
-                // printEventInfo("Key Pressed", event);
             }
 
             @Override
             public void keyReleased(KeyEvent event) {
-                // printEventInfo("Key Released", event);
             }
 
             @Override
-            public void keyTyped(KeyEvent event) {
-                printEventInfo("Key Typed", event);
-            }
-
-            private void printEventInfo(String str, KeyEvent e) {
-                System.out.println(str + " : " + e.getKeyChar());
+            public void keyTyped(KeyEvent e) {
                 if (e.getKeyChar() == 'q') {
                     System.exit(0);
                 }
@@ -158,10 +156,9 @@ public class Restaurant {
     }
 
     public static JPanel main_screen() {
-        System.out.println("    - main_screen loaded");
-
         JPanel screen = new JPanel(new FlowLayout());
         screen.setName("main_screen");
+
         JLabel textField = new JLabel(
                 "<html>Quel écran voulez-vous afficher ? <br/>1. Ecran prise de commande<br/>2. Ecran cuisine<br/>3. Ecran bar<br/>4. Ecran monitoring<br/><br/>Esc. Retour au menu principal<br/>Q. Quit</html>");
         screen.add(textField, BorderLayout.NORTH);
@@ -171,13 +168,8 @@ public class Restaurant {
 
     // new function that return a JPanel for Cuisine
     public static JPanel cuisine_screen() {
-        System.out.println("    - cuisine_screen loaded");
         JPanel screen = new JPanel(new FlowLayout());
-
         screen.setName("cuisine_screen");
-
-        JLabel textField = new JLabel("Cuisine screen.");
-        screen.add(textField, BorderLayout.NORTH);
 
         if (dayStarted == false) {
             JLabel textField2 = new JLabel("Veuillez choisir les employés du jour.");
@@ -215,12 +207,8 @@ public class Restaurant {
 
     // new funtion that return a jpanel for Bar
     public static JPanel bar_screen() {
-        System.out.println("    - bar_screen loaded");
-
         JPanel screen = new JPanel(new FlowLayout());
         screen.setName("bar_screen");
-        JLabel textField = new JLabel("Ecran bar.");
-        screen.add(textField, BorderLayout.NORTH);
 
         if (dayStarted == false) {
             JLabel textField2 = new JLabel("Veuillez choisir les employés du jour.");
@@ -257,12 +245,8 @@ public class Restaurant {
 
     // new function that return a jpanel for Monitoring
     public static JPanel monitoring_screen() {
-        System.out.println("    - monitoring_screen loaded");
-
         JPanel screen = new JPanel(new FlowLayout());
         screen.setName("monitoring_screen");
-        JLabel textField = new JLabel("Ecran monitoring.");
-        screen.add(textField, BorderLayout.NORTH);
 
         if (dayStarted == false) {
             JLabel textField2 = new JLabel("Sélection employés du jour :");
@@ -280,19 +264,21 @@ public class Restaurant {
             List<Employe> employesDuJour = new ArrayList<>();
             // display all employes
             for (Employe employe : Employes.getAllEmployes()) {
-                JButton button = UI.createButton(employe.type + " : " + employe.nom + " " + employe.prenom);
+                JButton button = UI.createButton(
+                        employe.type + " : " + employe.nom + " " + employe.prenom + " - " + employe.streak
+                                + " jour(s)");
                 if (employe.streak < 3 || employe.type == EmployesEnum.MANAGER) {
                     employesDuJour.add(employe);
-                    button.setBackground(Color.GREEN);
+                    button.setBackground(new Color(20, 145, 72));
                     // toggle the color of the button on click
                     button.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            if (button.getBackground().equals(Color.GREEN)) {
+                            if (button.getBackground().equals(new Color(20, 145, 72))) {
                                 button.setBackground(Color.GRAY);
                                 employesDuJour.remove(employe);
                             } else {
-                                button.setBackground(Color.GREEN);
+                                button.setBackground(new Color(20, 145, 72));
                                 employesDuJour.add(employe);
                             }
                             // focus frame
@@ -300,7 +286,7 @@ public class Restaurant {
                         }
                     });
                 } else {
-                    button.setBackground(new Color(255, 50, 50));
+                    button.setBackground(new Color(145, 20, 20));
                     button.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -339,8 +325,15 @@ public class Restaurant {
         // Selection deja faite
         else {
 
-            JLabel textField2 = new JLabel("Employés du jour :");
-            screen.add(textField2);
+            // -------------------- //
+            // Tableau des employés //
+            // -------------------- //
+
+            // Create a container
+            JPanel container = new JPanel(new BorderLayout());
+
+            JLabel textField2 = new JLabel("Employés du jour :", SwingConstants.CENTER);
+            container.add(textField2, BorderLayout.NORTH);
 
             // En tete du tableau
             String[] columnNames = { "Nom",
@@ -361,30 +354,119 @@ public class Restaurant {
                 data[i][4] = employe.salaire;
                 i++;
             }
-
-            DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
-                @Override
-                public boolean isCellEditable(int row, int column) {
-                    // all cells false
-                    return false;
-                }
-            };
-
-            final JTable table = new JTable(data, columnNames);
-            table.setModel(tableModel);
-
+            final JTable table = new JTable();
+            table.setFocusable(false);
             table.setPreferredScrollableViewportSize(new Dimension(500, 70));
             table.setFillsViewportHeight(true);
 
+            // Table model not editable
+            DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+            table.setModel(model);
+
             JScrollPane scrollPane = new JScrollPane(table);
             // set height to display all table content
-            scrollPane.setPreferredSize(
-                    new Dimension(500, Math.min(350, (int) (Employes.getEmployesDuJour().size() * 17.8))));
+            scrollPane.setPreferredSize(new Dimension(500, 150));
+            container.add(scrollPane, BorderLayout.CENTER);
+            container.setPreferredSize(new Dimension(500, 180));
 
-            screen.add(scrollPane);
+            screen.add(container);
 
-            JLabel textField3 = new JLabel("Stock actuel :");
-            screen.add(textField3);
+            // -------------------------- //
+            // Form to add a new employee //
+            // -------------------------- //
+
+            JPanel form = new JPanel(new FlowLayout());
+            form.setName("form");
+            form.setPreferredSize(new Dimension(500, 100));
+            form.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            screen.add(form);
+            JLabel nomField = new JLabel("Nom :");
+            form.add(nomField);
+            JTextField nom = new JTextField(11);
+            form.add(nom);
+            JLabel prenomField = new JLabel("Prenom :");
+            form.add(prenomField);
+            JTextField prenom = new JTextField(11);
+            form.add(prenom);
+            JLabel roleField = new JLabel("Rôle :");
+            form.add(roleField);
+            // Dropdown menu
+            JComboBox<String> role = new JComboBox<String>();
+            role.addItem("Cuisinier");
+            role.addItem("Barman");
+            role.addItem("Serveur");
+            role.addItem("Manager");
+            form.add(role);
+            JLabel salaireField = new JLabel("Salaire :");
+            form.add(salaireField);
+            JTextField salaire = new JTextField(10);
+            form.add(salaire);
+            JButton add = UI.createButton("Ajouter");
+            add.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (nom.getText().isEmpty() || prenom.getText().isEmpty() || salaire.getText().isEmpty()) {
+                        // Check if salaire is a number
+                        JOptionPane.showMessageDialog(null, "Vous n'avez pas rempli tous les champs.", "Erreur",
+                                JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        try {
+                            Integer.parseInt(salaire.getText());
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(null, "Le salaire doit être un nombre.", "Erreur",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        switch (role.getSelectedItem().toString()) {
+                            case "Cuisinier":
+                                Employe employe = new Cuisinier(nom.getText(), prenom.getText(),
+                                        Integer.parseInt(salaire.getText()));
+                                Employes.addEmploye(employe);
+                                Employes.addEmployeDuJour(employe);
+                                break;
+                            case "Barman":
+                                Employe employe2 = new Barman(nom.getText(), prenom.getText(),
+                                        Integer.parseInt(salaire.getText()));
+                                Employes.addEmploye(employe2);
+                                Employes.addEmployeDuJour(employe2);
+                                break;
+                            case "Serveur":
+                                Employe employe3 = new Serveur(nom.getText(), prenom.getText(),
+                                        Integer.parseInt(salaire.getText()));
+                                Employes.addEmploye(employe3);
+                                Employes.addEmployeDuJour(employe3);
+                                break;
+                            case "Manager":
+                                Employe employe4 = new Manager(nom.getText(), prenom.getText(),
+                                        Integer.parseInt(salaire.getText()));
+                                Employes.addEmploye(employe4);
+                                Employes.addEmployeDuJour(employe4);
+                                break;
+                        }
+                        switch_between_screens(4);
+                    }
+                    // focus frame
+                    getFrame().requestFocus();
+                }
+            });
+            // Set size of form
+            form.setPreferredSize(new Dimension(500, 80));
+            form.add(add);
+
+            // ---------------- //
+            // Tableau du stock //
+            // ---------------- //
+
+            // Create a container
+            JPanel container2 = new JPanel();
+
+            JLabel textField3 = new JLabel("<html>Stock actuel : ", SwingConstants.CENTER);
+            container2.add(textField3, BorderLayout.NORTH);
 
             // En tete du tableau
             String[] columnNames2 = { "Ingrédient",
@@ -400,28 +482,27 @@ public class Restaurant {
                 i2++;
             }
 
-            DefaultTableModel tableModel2 = new DefaultTableModel(data2, columnNames2) {
-                @Override
-                public boolean isCellEditable(int row, int column) {
-                    // all cells false
-                    return false;
-                }
-            };
-
             final JTable table2 = new JTable(data2, columnNames2);
-            table2.setModel(tableModel2);
             table2.setFocusable(false);
-
             table2.setPreferredScrollableViewportSize(new Dimension(500, 70));
             table2.setFillsViewportHeight(true);
 
+            // Table model not editable
+            DefaultTableModel model2 = new DefaultTableModel(data2, columnNames2) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+            table2.setModel(model2);
+
             JScrollPane scrollPane2 = new JScrollPane(table2);
             // set height to display all table content
-            scrollPane2.setPreferredSize(
-                    new Dimension(500, Math.min(350, (int) (Employes.getEmployesDuJour().size() * 17.8))));
+            scrollPane2.setPreferredSize(new Dimension(500, 150));
+            container2.add(scrollPane2, BorderLayout.CENTER);
+            container2.setPreferredSize(new Dimension(500, 180));
 
-            scrollPane2.setFocusable(false);
-            screen.add(scrollPane2);
+            screen.add(container2, BorderLayout.CENTER);
 
             JButton button = UI.createButton("Fin de la journée");
             screen.add(button, BorderLayout.SOUTH);
@@ -439,12 +520,8 @@ public class Restaurant {
 
     // new function that return a jpanel for Prise de commande
     public static JPanel commande_screen() {
-        System.out.println("    - commande_screen loaded");
-
         JPanel screen = new JPanel(new FlowLayout());
         screen.setName("commande_screen");
-        JLabel textField = new JLabel("Ecran prise de commande.");
-        screen.add(textField, BorderLayout.NORTH);
 
         if (dayStarted == false) {
             JLabel textField2 = new JLabel("Veuillez choisir les employés du jour.");

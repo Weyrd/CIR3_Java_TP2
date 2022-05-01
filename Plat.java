@@ -1,6 +1,5 @@
 import java.util.*;
 
-
 public class Plat {
     String nom;
     int prix;
