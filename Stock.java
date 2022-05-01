@@ -1,7 +1,4 @@
 import java.util.*;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import static java.util.Map.entry;
 
 public class Stock {

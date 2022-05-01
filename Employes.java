@@ -90,4 +90,15 @@ public class Employes {
     public static void removeEmployeDuJour(Employe employe) {
         employesDuJour.remove(employe);
     }
+
+    public static void endOfDay() {
+        for (Employe employe : employes) {
+            if (employesDuJour.contains(employe)) {
+                employe.streak++;
+            } else {
+                employe.streak = 0;
+            }
+        }
+        employesDuJour.clear();
+    }
 }
