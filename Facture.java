@@ -2,6 +2,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.io.BufferedWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Facture {
@@ -9,6 +10,7 @@ public class Facture {
     private List<Commande> commandes;
     // var tableNumber
     private int tableNumber;
+    private List<Commande> commandesMenu = new ArrayList<>();
 
     // java timestamp to formatted string utc+2
     public static String getTime(long timestamp) {
@@ -29,24 +31,46 @@ public class Facture {
             output += "┌─────────────────────────────────┐\n│            Table N°" + tableNumber
                     + "            │\n├─────────────────────────────────┤\n";
             for (Commande c : commandes) {
-                for (Plat p : Stock.plats) {
-                    if (c.nom == p.nom) {
-                        // p.prix to str
-                        String price = Integer.toString(p.prix);
-                        output += "│ - " + p.nom + " ".repeat(24 - p.nom.length()) + p.prix + "€"
-                                + " ".repeat(5 - price.length()) + "│\n";
-                        totalPrice += p.prix;
+                if (c.isMenu) {
+                    commandesMenu.add(c);
+                } else {
+                    for (Plat p : Stock.plats) {
+                        if (c.nom == p.nom) {
+                            // p.prix to str
+                            String price = Integer.toString(p.prix);
+                            output += "│ - " + p.nom + " ".repeat(24 - p.nom.length()) + p.prix + "€"
+                                    + " ".repeat(5 - price.length()) + "│\n";
+                            totalPrice += p.prix;
+                        }
+                    }
+                    for (Boisson p : Stock.boissons) {
+                        if (c.nom == p.nom) {
+                            // p.prix to str
+                            String price = Integer.toString(p.prix);
+                            output += "│ - " + p.nom + " ".repeat(24 - p.nom.length()) + p.prix + "€"
+                                    + " ".repeat(5 - price.length()) + "│\n";
+                            totalPrice += p.prix;
+                        }
                     }
                 }
-                for (Boisson p : Stock.boissons) {
-                    if (c.nom == p.nom) {
-                        // p.prix to str
-                        String price = Integer.toString(p.prix);
-                        output += "│ - " + p.nom + " ".repeat(24 - p.nom.length()) + p.prix + "€"
-                                + " ".repeat(5 - price.length()) + "│\n";
-                        totalPrice += p.prix;
+            }
+            if (commandesMenu.size() != 0) {
+                int n = commandesMenu.size() / (7*2);
+                int price = n * 100;
+                output += "│ - Menu 100 ans (x" + n + ")       " + price + "€  │\n";
+                for (Commande c : commandesMenu) {
+                    for (Plat p : Stock.plats) {
+                        if (c.nom == p.nom) {
+                            output += "│   - " + p.nom + " ".repeat(23 - p.nom.length()) + "     │\n";
+                        }
+                    }
+                    for (Boisson p : Stock.boissons) {
+                        if (c.nom == p.nom) {
+                            output += "│   - " + p.nom + " ".repeat(23 - p.nom.length()) + "     │\n";
+                        }
                     }
                 }
+                totalPrice += price;
             }
             String totalPriceStr = String.valueOf(totalPrice);
             output += "│                                 │\n│ Prix Total                " + totalPrice + "€"

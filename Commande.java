@@ -5,12 +5,14 @@ public class Commande {
     public boolean isPlat;
     public long timeStamp;
     public boolean isComplete = false;
+    public boolean isMenu = false;
 
-    Commande(String nom, boolean isPlat, int table) {
+    Commande(String nom, boolean isPlat, int table, boolean isMenu) {
         this.nom = nom;
         this.isPlat = isPlat;
         this.timeStamp = System.currentTimeMillis();
         this.table = table;
+        this.isMenu = isMenu;
     }
 
     // function that return difference between this.timeStamp and currentTimeStamp
