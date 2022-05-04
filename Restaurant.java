@@ -68,12 +68,14 @@ public class Restaurant {
         for (Commande commande : commandes) {
             if (commande.table == tableNumber) {
                 commandeList.add(commande);
-
             }
         }
-        commandes.removeAll(commandeList);
-        Facture facture = new Facture(commandeList, tableNumber);
-        facture.printFacture();
+
+        if (commandeList.size() != 0) {
+            commandes.removeAll(commandeList);
+            Facture facture = new Facture(commandeList, tableNumber);
+            facture.printFacture();
+        }
     }
 
     public static void switch_between_screens(int key) {
@@ -484,6 +486,7 @@ public class Restaurant {
     // new function that return a jpanel for Prise de commande
     static boolean isMenuActive = false;
     static int menuPlat = 7, menuBoisson = 7;
+
     public static JPanel commande_screen() {
         JPanel screen = new JPanel(new FlowLayout());
         screen.setName("commande_screen");
@@ -529,28 +532,28 @@ public class Restaurant {
             billButton.setEnabled(false);
         }
 
-
         // Button to create the bill
         JButton menuButton = UI.createButton("Commander le menu 100 ans", Color.PINK);
         screen.add(menuButton, BorderLayout.SOUTH);
-        
+
         JLabel menuText = new JLabel("");
         if (isMenuActive) {
-            menuText.setText("Menu 100 ans : " + menuPlat + " plats restants, " + menuBoisson + " boissons restantes.");;
+            menuText.setText("Menu 100 ans : " + menuPlat + " plats restants, " + menuBoisson + " boissons restantes.");
+            ;
         }
 
         menuButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 isMenuActive = true;
-                menuText.setText("Menu 100 ans : " + menuPlat + " plats restants, " + menuBoisson + " boissons restantes.");
+                menuText.setText(
+                        "Menu 100 ans : " + menuPlat + " plats restants, " + menuBoisson + " boissons restantes.");
                 // refresh frame
-                switch_between_screens(1);               
+                switch_between_screens(1);
                 // focus frame
                 getFrame().requestFocus();
             }
         });
-
 
         JSeparator separator2 = new JSeparator();
         separator2.setPreferredSize(new Dimension(1000000, 7));
@@ -564,10 +567,12 @@ public class Restaurant {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    commandes.add(new Commande(plat.nom, true, comboBox.getSelectedIndex() + 1, isMenuActive && menuPlat > 0));
+                    commandes.add(new Commande(plat.nom, true, comboBox.getSelectedIndex() + 1,
+                            isMenuActive && menuPlat > 0));
                     if (isMenuActive && menuPlat > 0) {
                         menuPlat--;
-                        menuText.setText("Menu 100 ans : " + menuPlat + " plats restants, " + menuBoisson + " boissons restantes.");
+                        menuText.setText("Menu 100 ans : " + menuPlat + " plats restants, " + menuBoisson
+                                + " boissons restantes.");
                         if (menuPlat == 0 && menuBoisson == 0) {
                             isMenuActive = false;
                             menuBoisson = 7;
@@ -575,7 +580,7 @@ public class Restaurant {
                             menuText.setText("");
                             switch_between_screens(1);
                         }
-                    } 
+                    }
 
                     // focus frame
                     getFrame().requestFocus();
@@ -618,10 +623,12 @@ public class Restaurant {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    commandes.add(new Commande(boisson.nom, false, comboBox.getSelectedIndex() + 1, isMenuActive && menuBoisson > 0));
+                    commandes.add(new Commande(boisson.nom, false, comboBox.getSelectedIndex() + 1,
+                            isMenuActive && menuBoisson > 0));
                     if (isMenuActive && menuBoisson > 0) {
                         menuBoisson--;
-                        menuText.setText("Menu 100 ans : " + menuPlat + " plats restants, " + menuBoisson + " boissons restantes.");
+                        menuText.setText("Menu 100 ans : " + menuPlat + " plats restants, " + menuBoisson
+                                + " boissons restantes.");
                         if (menuPlat == 0 && menuBoisson == 0) {
                             isMenuActive = false;
                             menuBoisson = 7;
